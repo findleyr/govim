@@ -1,0 +1,26 @@
+# Test that the quickfix window gets populated with error messages from gopls
+# where the error is in a dependency of the current file's package.
+
+vim ex 'e main.go'
+errlogmatch 'PublishDiagnostics callback: &protocol.PublishDiagnosticsParams{\n\S+:\s+URI:\s+"file://'$WORK/main.go
+vim ex 'copen'
+vim ex 'w errors'
+cmp errors errors.golden
+errlogmatch -count=0 'LogMessage callback: &protocol\.LogMessageParams\{Type:%v, Message:".*'
+
+-- go.mod --
+module mod.com
+
+-- main.go --
+package main
+
+import _ "mod.com/p"
+
+func main() {
+}
+-- p/p.go --
+package p
+
+var x Type
+-- errors.golden --
+p/p.go|3 col 7| undefined: Type
