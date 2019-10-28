@@ -258,10 +258,32 @@ const (
 	SeverityHint = Severity(protocol.SeverityHint)
 )
 
+// SeverityPriority is used when placing signs and text property highlights.
+// Values are based on the default value for signs, 10.
+var SeverityPriority = map[Severity]int{
+	SeverityErr:  14,
+	SeverityWarn: 12,
+	SeverityInfo: 10,
+	SeverityHint: 8,
+}
+
+// Highlight returns corresponding highlight name for a severity.
+var SeverityHighlight = map[Severity]string{
+	SeverityErr:  HighlightErr,
+	SeverityWarn: HighlightWarn,
+	SeverityInfo: HighlightInfo,
+	SeverityHint: HighlightHint,
+}
+
 // Highlight names as defined by ftplugin/go.vim.
 const (
 	HighlightErr  string = "govimErr"
 	HighlightWarn string = "govimWarn"
 	HighlightInfo string = "govimInfo"
 	HighlightHint string = "govimHint"
+
+	HighlightSignErr  string = "govimSignErr"
+	HighlightSignWarn string = "govimSignWarn"
+	HighlightSignInfo string = "govimSignInfo"
+	HighlightSignHint string = "govimSignHint"
 )

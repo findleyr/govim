@@ -50,6 +50,14 @@ type Config struct {
 	// Default: true
 	QuickfixSigns *bool `json:",omitempty"`
 
+	// HighlightDiagnostics enables in-code highlighting of diagnostics using
+	// text properties. Each diagnostic reported by gopls will be highlighted
+	// according to it's severity, using the following vim defined highlight
+	// rules: govimErr, govimWarn, govimInfo & govimHint.
+	//
+	// Default: true
+	HighlightDiagnostics *bool `json:",omitempty"`
+
 	// CompletionDeepCompletiions enables gopls' deep completion option
 	// in the derivation of completion candidates.
 	//
