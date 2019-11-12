@@ -88,6 +88,18 @@ function! s:validGoImportsLocalPrefix(v)
   return s:validString(a:v)
 endfunction
 
+function! s:validGoplsEnv(v)
+  if type(a:v) != 4
+    return [v:false, "value must be a dict"]
+  endif
+  for [key, value] in items(a:v)
+    if type(value) != 1
+      return [v:false, "value for key ".key." must be a string"]
+    endif
+  endfor
+  return [v:true, ""]
+endfunction
+
 function! s:validExperimentalMouseTriggeredHoverPopupOptions(v)
   if has_key(a:v, "line")
     if type(a:v["line"]) != 0
@@ -116,6 +128,7 @@ let s:validators = {
       \ "CompletionCaseSensitive": function("s:validCompletionCaseSensitive"),
       \ "CompleteUnimported": function("s:validCompleteUnimported"),
       \ "GoImportsLocalPrefix": function("s:validGoImportsLocalPrefix"),
+      \ "GoplsEnv": function("s:validGoplsEnv"),
       \ "ExperimentalMouseTriggeredHoverPopupOptions": function("s:validExperimentalMouseTriggeredHoverPopupOptions"),
       \ "ExperimentalCursorTriggeredHoverPopupOptions": function("s:validExperimentalCursorTriggeredHoverPopupOptions"),
       \ }

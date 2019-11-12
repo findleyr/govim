@@ -21,6 +21,7 @@ const (
 	goplsCaseSensitiveCompletion = "caseSensitiveCompletion"
 	goplsCompleteUnimported      = "completeUnimported"
 	goplsGoImportsLocalPrefix    = "local"
+	goplsEnv                     = "env"
 )
 
 var _ protocol.Client = (*govimplugin)(nil)
@@ -144,6 +145,11 @@ func (g *govimplugin) Configuration(ctxt context.Context, params *protocol.Param
 	}
 	if g.vimstate.config.GoImportsLocalPrefix != nil {
 		conf[goplsGoImportsLocalPrefix] = *g.vimstate.config.GoImportsLocalPrefix
+	}
+	if g.vimstate.config.GoplsEnv != nil {
+		// It is safe not to copy the map here because a new config setting from
+		// Vim creates a new map.
+		conf[goplsEnv] = *g.vimstate.config.GoplsEnv
 	}
 	res[0] = conf
 

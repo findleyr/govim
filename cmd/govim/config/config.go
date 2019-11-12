@@ -80,6 +80,13 @@ type Config struct {
 	// comma-separated list
 	GoImportsLocalPrefix *string `json:",omitempty"`
 
+	// GoplsEnv configures the set of environment variables gopls is using in
+	// calls to go/packages. This is most easily understood in the context of
+	// build tags/constraints, where GOOS/GOARCH could be set for example, or
+	// GOFLAGS set to "-mod=readonly" in order to prevent changes being
+	// automatically made to go.mod.
+	GoplsEnv *map[string]string `json:",omitempty"`
+
 	// ExperimentalMouseTriggeredHoverPopupOptions is a map of options to apply
 	// when creating hover-based popup windows triggered by the mouse hovering
 	// over an identifier. It corresponds to the second argument to popup_create

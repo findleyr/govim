@@ -1,0 +1,56 @@
+# Test that calling govim#config#Set with a value for GoplsEnv of GOFLAGS
+# does the right thing. This will necessarily involve a number of checks
+# for the various build flags that can be set via GOFLAGS.
+
+env
+vim ex 'e main.go'
+errlogmatch 'PublishDiagnostics callback: &protocol.PublishDiagnosticsParams{\n\S+:\s+URI:\s+"file://'$WORK/main.go
+vim ex 'copen'
+vim ex 'w errors'
+vim ex 'cclose'
+cmp errors pre.golden
+vim ex 'w'
+
+# Verify go.mod has not changed
+cmp go.mod go.mod.golden.pre
+
+# Change go.mod from outside Vim
+exec go get example.com/blah@v1.0.0
+exec go mod tidy
+cmp go.mod go.mod.golden.post
+
+# Verify the diagnostic has been updated
+errlogmatch 'PublishDiagnostics callback: &protocol.PublishDiagnosticsParams{\n\S+:\s+URI:\s+"file://'$WORK/main.go
+vim ex 'copen'
+vim ex 'w errors'
+vim ex 'cclose'
+cmp errors post.golden
+
+# Disabled pending resolution to https://github.com/golang/go/issues/34103
+# errlogmatch -count=0 'LogMessage callback: &protocol\.LogMessageParams\{Type:(1|2), Message:".*'
+
+-- go.mod --
+module mod.com
+
+go 1.13
+-- go.mod.golden.pre --
+module mod.com
+
+go 1.13
+-- go.mod.golden.post --
+module mod.com
+
+go 1.13
+
+require example.com/blah v1.0.0
+-- main.go --
+package main
+
+import "example.com/blah"
+
+func main() {
+	println(blah.Name)
+}
+-- pre.golden --
+main.go|3 col 8| could not import example.com/blah (no package for import example.com/blah)
+-- post.golden --
