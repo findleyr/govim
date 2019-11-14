@@ -39,10 +39,10 @@ rm -f $(git ls-files -- ':!:cmd/govim/internal/golang_org_x_tools' '**/gen_*.*' 
 go generate $(go list ./... | grep -v 'govim/internal/golang_org_x_tools')
 go test $(go list ./... | grep -v 'govim/internal/golang_org_x_tools')
 
-if [ "${CI:-}" == "true" ] && [ "${TRAVIS_BRANCH:-}_${TRAVIS_PULL_REQUEST_BRANCH:-}" == "master_" ]
-then
+# if [ "${CI:-}" == "true" ] && [ "${TRAVIS_BRANCH:-}_${TRAVIS_PULL_REQUEST_BRANCH:-}" == "master_" ]
+# then
 	go test -race $(go list ./... | grep -v 'govim/internal/golang_org_x_tools')
-fi
+# fi
 
 go vet $(go list ./... | grep -v 'govim/internal/golang_org_x_tools')
 go run honnef.co/go/tools/cmd/staticcheck $(go list ./... | grep -v 'govim/internal/golang_org_x_tools')
