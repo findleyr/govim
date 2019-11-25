@@ -1,0 +1,43 @@
+# Test that calling govim#config#Set with a value for GoplsEnv of GOFLAGS
+# does the right thing. This will necessarily involve a number of checks
+# for the various build flags that can be set via GOFLAGS.
+
+# Before setting GOFLAGS with -tags=other
+vim ex 'e main.go'
+errlogmatch 'PublishDiagnostics callback: &protocol.PublishDiagnosticsParams{\n\S+:\s+URI:\s+"file://'$WORK/main.go
+vim ex 'copen'
+vim ex 'w errors'
+cmp errors pre.golden
+
+# Close the errors window
+vim ex 'cclose'
+
+# After setting GOFLAGS with -tags=other
+vim ex 'call govim#config#Set(\"GoplsEnv\", {\"GOFLAGS\": \"-tags=other\"})'
+errlogmatch 'PublishDiagnostics callback: &protocol.PublishDiagnosticsParams{\n\S+:\s+URI:\s+"file://'$WORK/main.go
+vim ex 'copen'
+vim ex 'w errors'
+cmp errors post.golden
+
+# Disabled pending resolution to https://github.com/golang/go/issues/34103
+# errlogmatch -count=0 'LogMessage callback: &protocol\.LogMessageParams\{Type:(1|2), Message:".*'
+
+-- go.mod --
+module mod.com
+
+-- main.go --
+package main
+
+func main() {
+	DoIt()
+}
+-- other.go --
+// +build other
+
+package main
+
+func DoIt() {
+}
+-- pre.golden --
+main.go|4 col 2| undeclared name: DoIt
+-- post.golden --
