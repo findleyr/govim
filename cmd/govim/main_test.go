@@ -18,10 +18,10 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/creack/pty"
 	"github.com/govim/govim/cmd/govim/config"
 	"github.com/govim/govim/testdriver"
 	"github.com/govim/govim/testsetup"
-	"github.com/creack/pty"
 	"github.com/rogpeppe/go-internal/goproxytest"
 	"github.com/rogpeppe/go-internal/testscript"
 )
@@ -213,7 +213,7 @@ func TestInstallScripts(t *testing.T) {
 
 	t.Run("scripts-with-gopls-from-path", func(t *testing.T) {
 		testscript.Run(t, testscript.Params{
-			Dir: "testdatainstall",
+			Dir: filepath.Join("testdata", "install"),
 			Setup: func(e *testscript.Env) error {
 				var path string
 				for i := len(e.Vars) - 1; i >= 0; i-- {
